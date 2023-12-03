@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 WSGI_APPLICATION = "main.wsgi.application"
-LOGIN_REDIRECT_URL = "nuarte:listar_instrumentos"
+LOGIN_REDIRECT_URL = "nuarte:index"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
