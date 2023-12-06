@@ -2,7 +2,7 @@ from django.urls import path
 from nuarte.views import (
     index, ListarInstrumentosView, CadastrarInstrumentoView, AtualizarInstrumentoView, DeletarInstrumentoView, InstrumentoDetailView,
     ListarPerfisView, CadastrarPerfilView, AtualizarPerfilView, DeletarPerfilView,
-    ListarHistoricoView, solicitar_instrumento, devolver_instrumento, administracao, listar_solicitacoes, aprovar_solicitacao, rejeitar_solicitacao,
+    ListarHistoricoView, solicitar_instrumento, devolver_instrumento, administracao, listar_solicitacoes, aprovar_solicitacao, rejeitar_solicitacao, gerenciamento_instrumentos
 )
 
 app_name = 'nuarte'
@@ -27,5 +27,5 @@ urlpatterns = [
     path('aprovar_solicitacao/<int:historico_id>/', aprovar_solicitacao, name='aprovar_solicitacao'),
     path('rejeitar_solicitacao/<int:historico_id>/', rejeitar_solicitacao, name='rejeitar_solicitacao'),
     path('administracao/', administracao, name='administracao'),
-
+    path('gerenciamento_instrumentos/', gerenciamento_instrumentos, name='gerenciamento_instrumentos'),
 ]

@@ -185,3 +185,7 @@ def administracao(request):
 
 def index(request):
     return render(request, 'nuarte/index.html')
+
+def gerenciamento_instrumentos(request):
+    instrumentos = Instrumento.objects.all()
+    return render(request, 'nuarte/gerenciamento_instrumentos.html', {'instrumentos': instrumentos})
