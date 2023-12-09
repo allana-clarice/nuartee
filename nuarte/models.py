@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Notificacao(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    mensagem = models.CharField(max_length=255)
+    lida = models.BooleanField(default=False)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    
+
 class Historico(models.Model):
     OPERACAO_CHOICES = [
         ('S', 'Solicitação de instrumento'),
@@ -13,10 +20,11 @@ class Historico(models.Model):
     operacao = models.CharField(max_length=1, choices=OPERACAO_CHOICES)
     data_operacao = models.DateTimeField(auto_now_add=True)
     devolucao = models.DateTimeField(null=True, blank=True)
+    notificacao = models.ForeignKey(Notificacao, on_delete=models.SET_NULL, null=True, blank=True)
     
     # Adicione o campo aprovado
     aprovado = models.BooleanField(default=False)
-
+ 
     def __str__(self):
         return f"{self.usuario.username} - {self.instrumento.nome}"
 
@@ -28,7 +36,6 @@ class Instrumento(models.Model):
 
     def __str__(self):
         return self.nome
-
 
 class Perfil(models.Model):
     USUARIO_CHOICES = [

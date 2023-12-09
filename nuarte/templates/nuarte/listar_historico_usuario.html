@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2 class="mb-4">Histórico de Operações - {{ request.user.username }}</h2>
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Data da Solicitação</th>
+              <th>Instrumento</th>
+              <th>Operação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for operacao in historico_usuario %}
+              <tr>
+                <td>{{ operacao.data_operacao }}</td>
+                <td>{{ operacao.instrumento.nome }}</td>
+                <td>{{ operacao.operacao }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <a href="{% url 'nuarte:index' %}" class="btn btn-secondary mt-3">Voltar</a>
+    </div>
+  
+    <style>
+      body, html {
+        height: 100%;
+      }
+  
+      .container-fluid {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+  
+      h2 {
+        margin-bottom: 30px;
+      }
+  
+      table {
+        width: 80%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+  
+      th, td {
+        border: 1px solid #dee2e6;
+        padding: 8px;
+        text-align: left;
+      }
+  
+      th {
+        background-color: #007bff;
+        color: #fff;
+      }
+  
+      .pagination {
+        margin-top: 20px;
+      }
+  
+      .pagination .page-item .page-link {
+        color: #007bff;
+        border: 1px solid #007bff;
+      }
+  
+      .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border: 1px solid #007bff;
+      }
+    </style>
+  {% endblock %}
+  

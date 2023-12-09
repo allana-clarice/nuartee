@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Notificações</h2>
+  
+  {% if notificacoes %}
+    <ul class="list-group">
+      {% for notificacao in notificacoes %}
+        <li class="list-group-item">
+          {{ notificacao.mensagem }}
+          <span class="float-right">{{ notificacao.data_notificacao|date:"d/m/Y H:i:s" }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="mt-3">Nenhuma notificação disponível.</p>
+  {% endif %}
+
+  <div class="mt-4">
+    <a href="{% url 'nuarte:index' %}" class="btn btn-secondary">Voltar</a>
+  </div>
+</div>
+{% endblock %}

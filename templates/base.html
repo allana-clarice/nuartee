@@ -45,7 +45,7 @@
                     <a href="{% url 'nuarte:administracao' %}"><span class="fa fa-cogs"></span>Administração</a>
                 </li>
                 <li>
-                    <a href="#"><span class="fa fa-paper-plane"></span> Contato</a>
+                    <a href="{% url 'nuarte:exibir_notificacoes' %}"><span class="fa fa-paper-plane"></span>Notificações</a>
                 </li>
             </ul>
     
@@ -79,7 +79,7 @@
                             <a class="nav-link" href="{% url 'nuarte:listar_instrumentos' %}">Instrumentos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="nuarteseuemail@exemplo.com"> Contato</a>
+                            <a class="nav-link" href="{% url 'nuarte:listar_historico_usuario' %}"> Seu Histórico</a>
                         </li>
                     </ul>
                 </div>

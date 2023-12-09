@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Instrumento, Historico, Perfil
+from .models import Instrumento, Historico, Perfil, Notificacao
 from .forms import InstrumentoForm, PerfilForm
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
@@ -115,10 +115,16 @@ def solicitar_instrumento(request):
         instrumento_id = request.POST.get('instrumento')
         instrumento = Instrumento.objects.get(pk=instrumento_id)
 
+        notificacao = Notificacao.objects.create(
+            usuario=request.user,
+            mensagem='Sua solicitação foi recebida. Aguarde aprovação.'
+        )
+
         Historico.objects.create(
             usuario=request.user,
             instrumento=instrumento,
-            operacao='Solicitação de instrumento'
+            operacao='Solicitação de instrumento',
+            notificacao=notificacao
         )
  
         messages.success(request, 'Instrumento solicitado com sucesso!')
@@ -151,6 +157,10 @@ def devolver_instrumento(request, instrumento_id):
         messages.error(request, 'Instrumento não encontrado.')
         return redirect('nuarte:listar_instrumentos')
 
+    except Instrumento.DoesNotExist:
+        messages.error(request, 'Instrumento não encontrado.')
+        return redirect('nuarte:listar_instrumentos')
+    
 def listar_solicitacoes(request):
     # Obtém todas as solicitações pendentes
     solicitacoes_pendentes = Historico.objects.filter(aprovado=False)
@@ -160,13 +170,23 @@ def listar_solicitacoes(request):
 def aprovar_solicitacao(request, historico_id):
     historico = get_object_or_404(Historico, pk=historico_id)
 
-    # Atualiza o status para aprovado e a disponibilidade do instrumento
-    historico.aprovado = True
-    historico.instrumento.disponivel = False  # Instrumento indisponível após aprovação
-    historico.save()
-    historico.instrumento.save()
+    if historico.operacao == 'Solicitação de instrumento':
+        instrumento = historico.instrumento
+        instrumento.disponivel = False
+        instrumento.save()
 
-    messages.success(request, 'Solicitação aprovada com sucesso!')
+        Notificacao.objects.create(
+            usuario=historico.usuario,
+            mensagem=f"Sua solicitação para {instrumento.nome} foi aprovada. O instrumento está disponível para retirada."
+        )
+
+        # Remova a solicitação aprovada do histórico
+        historico.delete()
+
+        messages.success(request, 'Solicitação aprovada com sucesso e removida da lista!')
+    else:
+        messages.error(request, 'Operação inválida.')
+
     return redirect('nuarte:listar_solicitacoes')
 
 def rejeitar_solicitacao(request, historico_id):
@@ -189,3 +209,15 @@ def index(request):
 def gerenciamento_instrumentos(request):
     instrumentos = Instrumento.objects.all()
     return render(request, 'nuarte/gerenciamento_instrumentos.html', {'instrumentos': instrumentos})
+
+@login_required
+def listar_historico_usuario(request):
+    # Filtrar o histórico com base no usuário logado
+    historico_usuario = Historico.objects.filter(usuario=request.user).order_by('-data_operacao')
+    context = {'historico_usuario': historico_usuario}
+    return render(request, 'nuarte/listar_historico_usuario.html', context)
+
+@login_required
+def exibir_notificacoes(request):
+    notificacoes = Notificacao.objects.filter(usuario=request.user)
+    return render(request, 'nuarte/notificacoes.html', {'notificacoes': notificacoes})
