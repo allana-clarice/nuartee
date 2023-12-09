@@ -95,12 +95,11 @@ class DeletarPerfilView(SuccessMessageMixin, DeleteView):
 
 class ListarHistoricoView(ListView):
     template_name = 'nuarte/listar_historico.html'
-
-    def get(self, request, *args, **kwargs):
-        historico = Historico.objects.all()
-        return render(request, self.template_name, {'historico': historico})
-
+    model = Historico
     paginate_by = 8
+
+    def get_queryset(self):
+        return Historico.objects.all().order_by('-data_operacao')
 
 class InstrumentoDetailView(DetailView):
     model = Instrumento
@@ -195,6 +194,8 @@ def rejeitar_solicitacao(request, historico_id):
     # Atualiza o status para rejeitado
     historico.aprovado = False
     historico.save()
+
+    historico.delete()
 
     messages.success(request, 'Solicitação rejeitada com sucesso!')
     return redirect('nuarte:listar_solicitacoes')

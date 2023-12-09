@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for operacao in historico %}
+          {% for operacao in object_list %}
             <tr>
               <td>{{ operacao.data_operacao }}</td>
               <td>{{ operacao.usuario.username }}</td>
