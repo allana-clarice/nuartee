@@ -1,7 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Instrumento, Historico, Perfil
+from .models import Instrumento, Historico, Perfil, Notificacao
+
+class NotificacaoAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'mensagem', 'lida', 'data_criacao')
+    list_filter = ('usuario', 'lida')
+    search_fields = ('usuario__username', 'mensagem')
+    ordering = ('-data_criacao',)
+
+admin.site.register(Notificacao, NotificacaoAdmin)
 
 class PerfilInline(admin.StackedInline):
     model = Perfil

@@ -42,7 +42,7 @@ class ListarInstrumentosView(ListView):
     model = Instrumento
     template_name = 'nuarte/listar_instrumentos.html'
     context_object_name = 'instrumentos'
-    paginate_by = 6
+    paginate_by = 3
 
 @method_decorator(user_passes_test(is_admin), name='dispatch')
 class CadastrarInstrumentoView(SuccessMessageMixin, CreateView):

@@ -15,11 +15,7 @@ class Migration(migrations.Migration):
             name="aprovado",
             field=models.BooleanField(default=False),
         ),
-        migrations.AlterField(
-            model_name="historico",
-            name="devolucao",
-            field=models.DateTimeField(blank=True, null=True),
-        ),
+        
         migrations.AlterField(
             model_name="historico",
             name="operacao",
